@@ -1,0 +1,197 @@
+<div class="min-h-screen bg-gray-100 py-6">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Header Section -->
+    <div class="bg-white shadow-xl rounded-3xl overflow-hidden mb-8">
+      <div class="bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 px-8 py-12 text-white text-center">
+        <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-4">🎯 Organization Activities</h1>
+        <p class="text-xl opacity-90">Discover and join age-appropriate activities in <%= current_organization.name %></p>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="bg-gray-50 px-8 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="text-2xl font-bold text-purple-600"><%= @all_areas_count %></div>
+            <div class="text-gray-600">Total Activities</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-green-600"><%= @age_appropriate_areas.count %></div>
+            <% if moderator_or_admin? %>
+              <div class="text-gray-600">
+                <%= @showing_all ? "Showing All" : "In Your Age Group" %>
+              </div>
+            <% else %>
+              <div class="text-gray-600">Available to You</div>
+            <% end %>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-blue-600"><%= current_user.age %> years</div>
+            <div class="text-gray-600">Your Age</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900">Browse Activities</h2>
+        <% if moderator_or_admin? %>
+          <p class="text-gray-600">
+            <% if @showing_all %>
+              Viewing all activities (admin/moderator view)
+            <% else %>
+              Viewing activities for your age group (<%= current_user.age_group %>)
+            <% end %>
+          </p>
+        <% else %>
+          <p class="text-gray-600">Activities filtered by your age group (<%= current_user.age_group %>)</p>
+        <% end %>
+      </div>
+      
+      <% if @user_can_create %>
+        <div class="flex space-x-4">
+          <%= link_to new_participation_area_path, 
+              class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200" do %>
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+            </svg>
+            Create New Activity
+          <% end %>
+          
+          <% if moderator_or_admin? %>
+            <% if @showing_all %>
+              <%= link_to participation_areas_path(show_my_age: true), 
+                  class: "inline-flex items-center px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-xl transition-colors duration-200" do %>
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                Show My Age Group
+              <% end %>
+            <% else %>
+              <%= link_to participation_areas_path, 
+                  class: "inline-flex items-center px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-xl transition-colors duration-200" do %>
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                Show All Activities
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-sm text-gray-500 bg-gray-100 px-4 py-2 rounded-lg">
+          💡 Want to create activities? Contact your organization moderator or admin!
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Activities Grid -->
+    <% activities_to_show = @age_appropriate_areas %>
+    
+    <% if activities_to_show.any? %>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <% activities_to_show.each do |area| %>
+          <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200">
+            <!-- Activity Header -->
+            <div class="p-6 pb-4">
+              <div class="flex items-start justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-900 leading-tight">
+                  <%= area.title %>
+                </h3>
+                <% if can_edit_activity?(area) %>
+                  <div class="flex space-x-1">
+                    <%= link_to edit_participation_area_path(area), 
+                        class: "p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors",
+                        title: "Edit Activity" do %>
+                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                      </svg>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+              
+              <p class="text-gray-600 mb-4 line-clamp-3">
+                <%= truncate(area.content, length: 120) %>
+              </p>
+            </div>
+
+            <!-- Activity Footer -->
+            <div class="px-6 pb-6">
+              <div class="flex items-center justify-between">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                  <%= if (current_user.age || 18).between?(area.min_age, area.max_age)
+                        'bg-green-100 text-green-800'
+                      else
+                        'bg-yellow-100 text-yellow-800'
+                      end %>">
+                  <%= area.min_age == area.max_age ? "Age #{area.min_age}" : "Ages #{area.min_age}-#{area.max_age}" %>
+                </span>
+                
+                <%= link_to participation_area_path(area), 
+                    class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-200" do %>
+                  View Details
+                  <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-16">
+        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm2 6a2 2 0 104 0 2 2 0 00-4 0zm6 0a2 2 0 104 0 2 2 0 00-4 0z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-medium text-gray-900 mb-2">
+          <%= params[:show_all] ? "No Activities Found" : "No Age-Appropriate Activities" %>
+        </h3>
+        <p class="text-gray-500 mb-8">
+          <% if params[:show_all] %>
+            Your organization doesn't have any activities yet.
+          <% else %>
+            There are no activities available for your age group (<%= current_user.age_group %>).
+          <% end %>
+        </p>
+        
+        <% if @user_can_create %>
+          <%= link_to new_participation_area_path, 
+              class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200" do %>
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+            </svg>
+            Create the First Activity
+          <% end %>
+        <% else %>
+          <div class="text-center">
+            <p class="text-gray-500 mb-4">Only moderators and admins can create activities.</p>
+            <p class="text-sm text-gray-400">Contact your organization moderator or admin to request new activities.</p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Back Navigation -->
+    <div class="mt-12 text-center">
+      <%= link_to dashboard_path, 
+          class: "inline-flex items-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-xl transition-colors duration-200" do %>
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+        </svg>
+        Back to Dashboard
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+  <div class="relative py-3 sm:max-w-2xl sm:mx-auto">
+    <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+    <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+      <div class="max-w-xl mx-auto">
+        <div class="divide-y divide-gray-200">
+          <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+            <div class="text-center">
+              <div class="text-6xl mb-6">⏳</div>
+              <h1 class="text-3xl font-bold text-gray-800 mb-4">Waiting for Parental Consent</h1>
+              <p class="text-lg text-gray-600 mb-8">
+                Hi <%= current_user.name %>! Your account has been created successfully.
+              </p>
+              
+              <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-8">
+                <div class="flex items-start">
+                  <div class="text-yellow-600 text-2xl mr-3">👨‍👩‍👧‍👦</div>
+                  <div class="text-left">
+                    <h3 class="font-semibold text-yellow-800 mb-2">Parent/Guardian Approval Required</h3>
+                    <p class="text-yellow-700 text-sm">
+                      Since you are under 13 years old, we need permission from your parent or guardian before you can access all features of the platform.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+                <h3 class="font-semibold text-blue-800 mb-3">📧 What happens next?</h3>
+                <div class="text-left text-blue-700 text-sm space-y-2">
+                  <p>• We've sent an email to: <strong><%= current_user.parental_consent&.parent_email %></strong></p>
+                  <p>• Your parent/guardian will receive a consent link</p>
+                  <p>• Once they approve, you'll have full access to the platform</p>
+                  <p>• This usually takes just a few minutes!</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <p class="text-gray-600 text-sm">
+                  Check with your parent or guardian if they haven't received the email.
+                </p>
+                
+                <div class="space-x-4">
+                  <%= link_to "Check Again", waiting_for_consent_path, 
+                      class: "inline-block bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200" %>
+                  
+                  <%= link_to "Logout", destroy_user_session_path, 
+                      data: { "turbo-method": "delete" },
+                      class: "inline-block bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200" %>
+                </div>
+              </div>
+
+              <div class="mt-8 pt-6 border-t border-gray-200">
+                <p class="text-xs text-gray-500">
+                  This consent requirement helps us comply with COPPA (Children's Online Privacy Protection Act) to keep young users safe online.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

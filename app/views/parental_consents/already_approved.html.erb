@@ -1,0 +1,86 @@
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Already Approved Card -->
+    <div class="bg-white shadow-2xl rounded-3xl overflow-hidden">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 px-8 py-12 text-white text-center">
+        <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-4">✅ Already Approved</h1>
+        <p class="text-xl opacity-90">Consent has been given previously</p>
+      </div>
+
+      <!-- Content -->
+      <div class="px-8 py-12">
+        <div class="max-w-xl mx-auto text-center">
+          <div class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+              Good news!
+            </h2>
+            <p class="text-lg text-gray-600 leading-relaxed">
+              You have already approved your child's account. No further action is needed.
+            </p>
+          </div>
+
+          <!-- Status Info -->
+          <div class="bg-green-50 border border-green-200 rounded-2xl p-6 mb-8">
+            <div class="flex items-center justify-center mb-4">
+              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            </div>
+            <h3 class="text-lg font-semibold text-green-800 mb-2">
+              ✅ Consent Previously Given
+            </h3>
+            <p class="text-green-700">
+              Your consent was recorded on <strong><%= @parental_consent.consent_given_at.strftime("%B %d, %Y at %I:%M %p") %></strong>
+            </p>
+          </div>
+
+          <!-- Current Status -->
+          <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-8">
+            <h3 class="text-lg font-semibold text-blue-800 mb-4">
+              🎉 Your child's account status:
+            </h3>
+            <div class="text-left text-blue-700 text-sm space-y-2">
+              <p>• ✅ Account is fully activated</p>
+              <p>• ✅ Access to age-appropriate content</p>
+              <p>• ✅ Participating in supervised activities</p>
+              <p>• ✅ Protected by our safety measures</p>
+            </div>
+          </div>
+
+          <!-- Parent Rights -->
+          <div class="bg-gray-50 rounded-2xl p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              🔒 Remember: Your Rights as a Parent
+            </h3>
+            <div class="text-left text-gray-600 text-sm space-y-2">
+              <p>• You can revoke consent at any time</p>
+              <p>• You can request account deletion</p>
+              <p>• You can contact us with any concerns</p>
+              <p>• We protect your child's privacy</p>
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-900">
+              Questions or Concerns?
+            </h3>
+            <div class="text-sm text-gray-600 space-y-2">
+              <p>📧 Email: <a href="mailto:support@accesscontrol.demo" class="text-blue-600 hover:text-blue-800">support@accesscontrol.demo</a></p>
+              <p>🌐 Visit: <a href="http://localhost:3000" class="text-blue-600 hover:text-blue-800">Our Platform</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

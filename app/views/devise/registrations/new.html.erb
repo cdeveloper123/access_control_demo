@@ -1,0 +1,226 @@
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+  <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+    <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+      <div class="max-w-md mx-auto">
+        <div class="divide-y divide-gray-200">
+          <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Create Your Account</h2>
+            <p class="text-gray-600 mb-6">Join our community and start collaborating!</p>
+
+            <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'registration-form' }) do |f| %>
+              <%= f.error_notification %>
+
+              <!-- Custom Error Display -->
+              <% if resource.errors.any? %>
+                <div class="mb-6 bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      <div class="text-red-400 text-xl">⚠️</div>
+                    </div>
+                    <div class="ml-3">
+                      <h3 class="text-lg font-medium text-red-800">
+                        <%= pluralize(resource.errors.count, "error") %> prohibited this account from being saved:
+                      </h3>
+                      <div class="mt-2 text-sm text-red-700">
+                        <ul class="list-disc space-y-1 pl-5">
+                          <% resource.errors.full_messages.each do |message| %>
+                            <li><%= message %></li>
+                          <% end %>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+
+              <div class="form-inputs space-y-4">
+                <%= f.input :name,
+                            required: true,
+                            autofocus: true,
+                            label_html: { class: "block text-sm font-semibold text-gray-700 mb-2" },
+                            input_html: { 
+                              class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200",
+                              placeholder: "Enter your full name"
+                            } %>
+
+                <%= f.input :email,
+                            required: true,
+                            label_html: { class: "block text-sm font-semibold text-gray-700 mb-2" },
+                            input_html: { 
+                              autocomplete: "email",
+                              class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200",
+                              placeholder: "Enter your email address"
+                            } %>
+
+                <div class="mb-4">
+                  <label for="user_date_of_birth" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Date of birth <span class="text-red-500">*</span>
+                  </label>
+                  <input type="date" 
+                         name="user[date_of_birth]" 
+                         id="user_date_of_birth"
+                         class="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 date-input-large"
+                         onchange="checkAge()"
+                         min="1900-01-01"
+                         max="<%= Date.current.strftime('%Y-%m-%d') %>"
+                         required />
+                </div>
+
+                <%= f.input :organization_id,
+                            collection: Organization.all,
+                            prompt: "Select an organization",
+                            label: "Organization",
+                            label_html: { class: "block text-sm font-semibold text-gray-700 mb-2" },
+                            input_html: { 
+                              class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200"
+                            } %>
+
+                <div id="parent-email-section" style="display: none;">
+                  <%= f.input :parent_email,
+                              label: "Parent/Guardian Email",
+                              label_html: { class: "block text-sm font-semibold text-red-700 mb-2" },
+                              input_html: { 
+                                class: "w-full px-4 py-3 border-2 border-red-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-100 focus:border-red-500 transition-all duration-200",
+                                placeholder: "Enter parent/guardian email address"
+                              },
+                              hint: "Required for users under 13 years old",
+                              hint_html: { class: "text-sm text-red-600 mt-1" } %>
+                </div>
+
+                <%= f.input :password,
+                            required: true,
+                            hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                            label_html: { class: "block text-sm font-semibold text-gray-700 mb-2" },
+                            input_html: { 
+                              autocomplete: "new-password",
+                              class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200",
+                              placeholder: "Create a strong password"
+                            } %>
+
+                <%= f.input :password_confirmation,
+                            required: true,
+                            label: "Confirm Password",
+                            label_html: { class: "block text-sm font-semibold text-gray-700 mb-2" },
+                            input_html: { 
+                              autocomplete: "new-password",
+                              class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200",
+                              placeholder: "Confirm your password"
+                            } %>
+              </div>
+
+              <div class="form-actions pt-6">
+                <%= f.button :submit, "Create Account", 
+                    class: "w-full bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200" %>
+              </div>
+            <% end %>
+
+            <div class="pt-6 text-center">
+              <%= render "devise/shared/links" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Enhanced Date Input Styling */
+.date-input-large {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  position: relative;
+}
+
+.date-input-large:focus {
+  background: #ffffff;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2), 0 4px 6px -2px rgba(59, 130, 246, 0.1);
+  transform: translateY(-1px);
+}
+
+.date-input-large::-webkit-calendar-picker-indicator {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  opacity: 0.7;
+  margin-left: 8px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%233b82f6'%3e%3cpath fill-rule='evenodd' d='M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z' clip-rule='evenodd'/%3e%3c/svg%3e");
+  background-size: contain;
+  transition: all 0.2s ease;
+}
+
+.date-input-large::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Calendar popup enhancements (where possible) */
+.date-input-large::-webkit-datetime-edit {
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.date-input-large::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+.date-input-large::-webkit-datetime-edit-text {
+  color: #64748b;
+  padding: 0 2px;
+  font-weight: 500;
+}
+
+.date-input-large::-webkit-datetime-edit-month-field,
+.date-input-large::-webkit-datetime-edit-day-field,
+.date-input-large::-webkit-datetime-edit-year-field {
+  color: #1e293b;
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+}
+
+.date-input-large::-webkit-datetime-edit-month-field:focus,
+.date-input-large::-webkit-datetime-edit-day-field:focus,
+.date-input-large::-webkit-datetime-edit-year-field:focus {
+  background: #dbeafe;
+  outline: none;
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+  .date-input-large {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px 16px;
+  }
+}
+</style>
+
+<script>
+function checkAge() {
+  const dobInput = document.getElementById('user_date_of_birth');
+  const parentEmailSection = document.getElementById('parent-email-section');
+  const parentEmailInput = document.querySelector('#parent-email-section input');
+  
+  if (dobInput.value) {
+    const birthDate = new Date(dobInput.value);
+    const today = new Date();
+    const age = Math.floor((today - birthDate) / (365.25 * 24 * 60 * 60 * 1000));
+    
+    if (age < 13) {
+      parentEmailSection.style.display = 'block';
+      parentEmailInput.required = true;
+    } else {
+      parentEmailSection.style.display = 'none';
+      parentEmailInput.required = false;
+      parentEmailInput.value = '';
+    }
+  }
+}
+</script>

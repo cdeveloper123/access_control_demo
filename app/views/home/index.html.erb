@@ -1,0 +1,47 @@
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+  <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+    <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+    <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+      <div class="max-w-md mx-auto">
+        <div class="divide-y divide-gray-200">
+          <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+            <div class="text-center">
+              <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to Access Control Demo</h1>
+              <p class="text-xl text-gray-600 mb-8">A modern Rails application with authentication and role-based access control</p>
+              
+              <% if user_signed_in? %>
+                <div class="space-y-4">
+                  <p class="text-lg text-green-600 font-semibold">
+                    Hello, <%= current_user.name %>! 👋
+                  </p>
+                  <p class="text-gray-600">
+                    You are successfully logged in to the demo application.
+                  </p>
+                  
+                  <div class="space-x-4">
+                    <%= link_to "Edit Profile", edit_user_registration_path, 
+                        class: "inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200" %>
+                    
+                    <%= link_to "Logout", destroy_user_session_path, 
+                        data: { "turbo-method": "delete" },
+                        class: "inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200" %>
+                  </div>
+                </div>
+              <% else %>
+                <div class="space-y-4">
+                  <p class="text-gray-600">Please sign in or register to access the application.</p>
+                  <div class="space-x-4">
+                    <%= link_to "Login", new_user_session_path, 
+                        class: "inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200" %>
+                    <%= link_to "Register", new_user_registration_path, 
+                        class: "inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

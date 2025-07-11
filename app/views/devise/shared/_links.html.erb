@@ -1,0 +1,57 @@
+<div class="space-y-3">
+  <%- if controller_name != 'sessions' %>
+    <div class="text-center">
+      <%= link_to "Back to Sign In", new_session_path(resource_name), 
+          class: "inline-flex items-center px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium shadow-sm hover:shadow-md" %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+    <div class="text-center">
+      <%= link_to "Create New Account", new_registration_path(resource_name), 
+          class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl" %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+    <div class="text-center">
+      <%= link_to "Forgot your password?", new_password_path(resource_name), 
+          class: "text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 underline decoration-blue-200 hover:decoration-blue-400" %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+    <div class="text-center">
+      <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name), 
+          class: "text-emerald-600 hover:text-emerald-800 font-medium transition-colors duration-200" %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+    <div class="text-center">
+      <%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name), 
+          class: "text-amber-600 hover:text-amber-800 font-medium transition-colors duration-200" %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.omniauthable? %>
+    <div class="space-y-2">
+      <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-4 bg-white text-gray-500 font-medium">Or continue with</span>
+        </div>
+      </div>
+      
+      <%- resource_class.omniauth_providers.each do |provider| %>
+        <div class="text-center">
+          <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), 
+              data: { turbo: false },
+              class: "w-full inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-xl text-gray-700 bg-white hover:bg-gray-50 transition-all duration-200 font-medium shadow-sm hover:shadow-md" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,183 @@
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Main Card -->
+    <div class="bg-white shadow-2xl rounded-3xl overflow-hidden">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 px-8 py-12 text-white text-center">
+        <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-4">⏳ Waiting for Parental Consent</h1>
+        <p class="text-xl opacity-90">Your account is almost ready!</p>
+      </div>
+
+      <!-- Content -->
+      <div class="px-8 py-12">
+        <div class="max-w-2xl mx-auto text-center">
+          <div class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+              Hi <%= @user.name %>! 👋
+            </h2>
+            <p class="text-lg text-gray-600 leading-relaxed">
+              Since you're under 13 years old, we need your parent or guardian to give permission 
+              before you can start using all the amazing features on our platform.
+            </p>
+          </div>
+
+          <!-- Status Info -->
+          <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 mb-8">
+            <div class="flex items-center justify-center mb-4">
+              <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            </div>
+            <h3 class="text-lg font-semibold text-yellow-800 mb-2">
+              📧 Consent Email Sent
+            </h3>
+            <% if @parental_consent&.parent_email %>
+              <p class="text-yellow-700">
+                We've sent a consent form to <strong><%= @parental_consent.parent_email %></strong>
+              </p>
+            <% else %>
+              <p class="text-yellow-700">
+                A consent form has been sent to your parent/guardian's email address.
+              </p>
+            <% end %>
+          </div>
+
+          <!-- What happens next -->
+          <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-2xl font-bold text-blue-600">1</span>
+              </div>
+              <h4 class="font-semibold text-gray-900 mb-2">Parent Receives Email</h4>
+              <p class="text-sm text-gray-600">Your parent/guardian will get an email explaining our platform</p>
+            </div>
+            
+            <div class="text-center">
+              <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-2xl font-bold text-green-600">2</span>
+              </div>
+              <h4 class="font-semibold text-gray-900 mb-2">They Give Consent</h4>
+              <p class="text-sm text-gray-600">They'll click a special link to approve your account</p>
+            </div>
+            
+            <div class="text-center">
+              <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-2xl font-bold text-purple-600">3</span>
+              </div>
+              <h4 class="font-semibold text-gray-900 mb-2">You're All Set! 🎉</h4>
+              <p class="text-sm text-gray-600">Once approved, you'll have full access to everything</p>
+            </div>
+          </div>
+
+          <!-- What you can do -->
+          <div class="bg-gray-50 rounded-2xl p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              💡 What can you do while waiting?
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4 text-left">
+              <div class="flex items-start space-x-3">
+                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-900">Update Your Profile</p>
+                  <p class="text-sm text-gray-600">Add more info about yourself</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start space-x-3">
+                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-900">Explore the Interface</p>
+                  <p class="text-sm text-gray-600">Get familiar with the layout</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start space-x-3">
+                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-900">Learn About Safety</p>
+                  <p class="text-sm text-gray-600">Read our safety guidelines</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start space-x-3">
+                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-900">Ask Questions</p>
+                  <p class="text-sm text-gray-600">Contact support if you need help</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="space-y-4">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <%= link_to edit_user_registration_path, 
+                  class: "inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors duration-200 shadow-lg" do %>
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                </svg>
+                Update My Profile
+              <% end %>
+              
+              <% if @parental_consent&.parent_email %>
+                <%= button_to resend_consent_email_path, 
+                    method: :post, 
+                    class: "inline-flex items-center px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-xl transition-colors duration-200 shadow-lg",
+                    data: { 
+                      confirm: "Are you sure you want to resend the consent email to #{@parental_consent.parent_email}?",
+                      turbo_method: :post 
+                    } do %>
+                  <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                  </svg>
+                  📧 Resend Email
+                <% end %>
+              <% end %>
+            </div>
+
+            <div class="text-sm text-gray-500 text-center">
+              <% if @parental_consent&.parent_email %>
+                <p>Haven't received the email? Check your parent's spam folder or click "Resend Email" above.</p>
+              <% end %>
+              <p>Questions? Contact us at <a href="mailto:support@accesscontrol.demo" class="text-blue-600 hover:text-blue-800">support@accesscontrol.demo</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Info -->
+    <div class="mt-8 text-center">
+      <p class="text-sm text-gray-500">
+        🔒 Your privacy and safety are our top priorities. 
+        We follow all COPPA regulations to protect children online.
+      </p>
+    </div>
+  </div>
+</div>

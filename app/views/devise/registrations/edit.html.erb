@@ -1,0 +1,299 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold text-gray-900 mb-4">Edit Profile</h1>
+      <p class="text-lg text-gray-600">Update your personal information and security settings</p>
+    </div>
+
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= f.error_notification %>
+
+      <!-- Custom Error Display -->
+      <% if resource.errors.any? %>
+        <div class="mb-8 bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <div class="text-red-400 text-xl">⚠️</div>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-lg font-medium text-red-800">
+                <%= pluralize(resource.errors.count, "error") %> prohibited this profile from being saved:
+              </h3>
+              <div class="mt-2 text-sm text-red-700">
+                <ul class="list-disc space-y-1 pl-5">
+                  <% resource.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Profile Information -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Profile Info Section -->
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-6">
+              <div class="flex items-center">
+                <div class="text-white text-3xl mr-4">👤</div>
+                <div>
+                  <h2 class="text-2xl font-bold text-white">Profile Information</h2>
+                  <p class="text-blue-100">Update your personal details</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-8">
+              <div class="space-y-6">
+                <%= f.input :name,
+                            required: true,
+                            label_html: { class: "block text-sm font-semibold text-gray-700 mb-2" },
+                            input_html: { 
+                              class: "w-full px-4 py-3 border-2 #{resource.errors[:name].any? ? 'border-red-500 focus:border-red-500 focus:ring-red-100' : 'border-gray-200 focus:border-blue-500 focus:ring-blue-100'} rounded-xl focus:outline-none focus:ring-4 transition-all duration-200"
+                            },
+                            error_html: { class: "text-red-600 text-sm mt-1" } %>
+
+                <%= f.input :email,
+                            required: true,
+                            label_html: { class: "block text-sm font-semibold text-gray-700 mb-2" },
+                            input_html: { 
+                              class: "w-full px-4 py-3 border-2 #{resource.errors[:email].any? ? 'border-red-500 focus:border-red-500 focus:ring-red-100' : 'border-gray-200 focus:border-blue-500 focus:ring-blue-100'} rounded-xl focus:outline-none focus:ring-4 transition-all duration-200"
+                            },
+                            error_html: { class: "text-red-600 text-sm mt-1" } %>
+
+                <div class="mb-6">
+                  <label for="user_date_of_birth" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Date of birth
+                  </label>
+                  <input type="date" 
+                         name="user[date_of_birth]" 
+                         id="user_date_of_birth"
+                         value="<%= resource.date_of_birth&.strftime('%Y-%m-%d') %>"
+                         class="w-full px-6 py-4 text-lg border-2 <%= resource.errors[:date_of_birth].any? ? 'border-red-500 focus:border-red-500 focus:ring-red-100' : 'border-gray-200 focus:border-blue-500 focus:ring-blue-100' %> rounded-xl focus:outline-none focus:ring-4 transition-all duration-200 date-input-large"
+                         min="1900-01-01"
+                         max="<%= Date.current.strftime('%Y-%m-%d') %>" />
+                  <% if resource.errors[:date_of_birth].any? %>
+                    <div class="text-red-600 text-sm mt-1">
+                      <%= resource.errors[:date_of_birth].first %>
+                    </div>
+                  <% end %>
+                </div>
+
+                <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                  <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                    <p class="text-yellow-800">
+                      <strong>Pending email confirmation:</strong> <%= resource.unconfirmed_email %>
+                    </p>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Settings Section -->
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-green-500 to-teal-600 px-8 py-6">
+              <div class="flex items-center">
+                <div class="text-white text-3xl mr-4">🔒</div>
+                <div>
+                  <h2 class="text-2xl font-bold text-white">Security Settings</h2>
+                  <p class="text-green-100">Update your password (optional)</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-8">
+              <div class="space-y-6">
+                <%= f.input :password,
+                            label: "New Password",
+                            hint: "Leave blank if you don't want to change it",
+                            required: false,
+                            label_html: { class: "block text-sm font-semibold text-gray-700 mb-2" },
+                            input_html: { 
+                              autocomplete: "new-password",
+                              class: "w-full px-4 py-3 border-2 #{resource.errors[:password].any? ? 'border-red-500 focus:border-red-500 focus:ring-red-100' : 'border-gray-200 focus:border-green-500 focus:ring-green-100'} rounded-xl focus:outline-none focus:ring-4 transition-all duration-200",
+                              placeholder: "Enter new password (optional)"
+                            },
+                            hint_html: { class: "text-sm text-gray-600 mt-1" },
+                            error_html: { class: "text-red-600 text-sm mt-1" } %>
+
+                <%= f.input :password_confirmation,
+                            label: "Confirm New Password", 
+                            required: false,
+                            label_html: { class: "block text-sm font-semibold text-gray-700 mb-2" },
+                            input_html: { 
+                              autocomplete: "new-password",
+                              class: "w-full px-4 py-3 border-2 #{resource.errors[:password_confirmation].any? ? 'border-red-500 focus:border-red-500 focus:ring-red-100' : 'border-gray-200 focus:border-green-500 focus:ring-green-100'} rounded-xl focus:outline-none focus:ring-4 transition-all duration-200",
+                              placeholder: "Confirm new password (if changing)"
+                            },
+                            error_html: { class: "text-red-600 text-sm mt-1" } %>
+
+                <%= f.input :current_password,
+                            hint: "Required to save any changes to your profile for security purposes",
+                            required: true,
+                            label: "Current Password *",
+                            label_html: { class: "block text-sm font-semibold text-gray-700 mb-2" },
+                            input_html: { 
+                              autocomplete: "current-password",
+                              class: "w-full px-4 py-3 border-2 #{resource.errors[:current_password].any? ? 'border-red-500 focus:border-red-500 focus:ring-red-100' : 'border-gray-200 focus:border-green-500 focus:ring-green-100'} rounded-xl focus:outline-none focus:ring-4 transition-all duration-200",
+                              placeholder: "Enter your current password"
+                            },
+                            hint_html: { class: "text-sm text-gray-600 mt-1" },
+                            error_html: { class: "text-red-600 text-sm mt-1" } %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Update Button -->
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-8">
+              <%= f.button :submit, "Update Profile", 
+                  class: "w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg" %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar - Danger Zone & Quick Actions -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Danger Zone -->
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-red-500 to-pink-600 px-6 py-6">
+              <div class="text-center">
+                <div class="text-white text-3xl mb-2">⚠️</div>
+                <h3 class="text-xl font-bold text-white">Danger Zone</h3>
+                <p class="text-red-100 text-sm">Irreversible actions</p>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <div class="text-center space-y-4">
+                <p class="text-gray-600 text-sm">
+                  Unhappy with your account? You can permanently delete it, but this action cannot be undone.
+                </p>
+                
+                <%= button_to "Delete Account", 
+                    registration_path(resource_name), 
+                    method: :delete,
+                    form: { style: "display: inline;" },
+                    data: { 
+                      confirm: "Are you absolutely sure? This action cannot be undone!",
+                      turbo_confirm: "Are you absolutely sure? This action cannot be undone!" 
+                    },
+                    class: "w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+              <div class="space-y-3">
+                <%= link_to "Back to Dashboard", root_path, 
+                    class: "block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-xl transition-colors duration-200" %>
+                <%= link_to "View Organizations", "#", 
+                    class: "block w-full text-center bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-3 px-4 rounded-xl transition-colors duration-200" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Info Display -->
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Account Info</h3>
+              <div class="space-y-2 text-sm text-gray-600">
+                <p><strong>Age:</strong> <%= current_user.age %> years</p>
+                <p><strong>Age Group:</strong> <%= current_user.age_group.capitalize %></p>
+                <p><strong>Member Since:</strong> <%= current_user.created_at.strftime("%B %Y") %></p>
+                <% if current_user.organizations.any? %>
+                  <p><strong>Organizations:</strong> <%= current_user.organizations.count %></p>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+/* Enhanced Date Input Styling */
+.date-input-large {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  position: relative;
+}
+
+.date-input-large:focus {
+  background: #ffffff;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2), 0 4px 6px -2px rgba(59, 130, 246, 0.1);
+  transform: translateY(-1px);
+}
+
+.date-input-large::-webkit-calendar-picker-indicator {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  opacity: 0.7;
+  margin-left: 8px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%233b82f6'%3e%3cpath fill-rule='evenodd' d='M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z' clip-rule='evenodd'/%3e%3c/svg%3e");
+  background-size: contain;
+  transition: all 0.2s ease;
+}
+
+.date-input-large::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Calendar popup enhancements (where possible) */
+.date-input-large::-webkit-datetime-edit {
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.date-input-large::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+.date-input-large::-webkit-datetime-edit-text {
+  color: #64748b;
+  padding: 0 2px;
+  font-weight: 500;
+}
+
+.date-input-large::-webkit-datetime-edit-month-field,
+.date-input-large::-webkit-datetime-edit-day-field,
+.date-input-large::-webkit-datetime-edit-year-field {
+  color: #1e293b;
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+}
+
+.date-input-large::-webkit-datetime-edit-month-field:focus,
+.date-input-large::-webkit-datetime-edit-day-field:focus,
+.date-input-large::-webkit-datetime-edit-year-field:focus {
+  background: #dbeafe;
+  outline: none;
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+  .date-input-large {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px 16px;
+  }
+}
+</style>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parental Consent Required</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background-color: #f5f5f5; }
+    .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+    .content { padding: 30px; }
+    .button { display: inline-block; background: #10B981; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+    .info-box { background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 20px; margin: 20px 0; border-radius: 6px; }
+    .warning-box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 6px; }
+    .footer { background: #f8fafc; padding: 20px; text-align: center; font-size: 14px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🛡️ Parental Consent Required</h1>
+      <p>Your child wants to join <%= @organization %></p>
+    </div>
+    
+    <div class="content">
+      <h2>Hello,</h2>
+      
+      <p>Your child <strong><%= @child_name %></strong> (age <%= @child_age %>) has created an account on our platform and needs your permission to proceed.</p>
+      
+      <div class="info-box">
+        <h3>🔒 COPPA Compliance</h3>
+        <p>As required by the Children's Online Privacy Protection Act (COPPA), we need parental consent for users under 13 years old before they can access our platform features.</p>
+      </div>
+      
+      <h3>What happens when you approve?</h3>
+      <ul>
+        <li>✅ <%= @child_name %> will gain full access to age-appropriate content</li>
+        <li>✅ Their account will be fully activated</li>
+        <li>✅ They can participate in supervised activities</li>
+        <li>✅ You can revoke consent at any time</li>
+      </ul>
+      
+      <div class="warning-box">
+        <h3>⚠️ Safety First</h3>
+        <p>We prioritize your child's safety and privacy. All activities are moderated and age-appropriate. No personal information is shared with third parties.</p>
+      </div>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="<%= @consent_url %>" class="button">✅ APPROVE CONSENT</a>
+      </div>
+      
+      <p><strong>Important:</strong> This consent link is unique and expires in 30 days. Only click if you approve your child's participation.</p>
+      
+      <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+      
+      <h3>Questions or Concerns?</h3>
+      <p>If you have any questions about our platform, privacy policy, or safety measures, please contact us:</p>
+      <ul>
+        <li>📧 Email: <a href="mailto:support@accesscontrol.demo">support@accesscontrol.demo</a></li>
+        <li>🌐 Website: <a href="http://localhost:3000">Our Platform</a></li>
+      </ul>
+      
+      <p><small>If you did not expect this email or believe it was sent in error, please ignore it or contact our support team.</small></p>
+    </div>
+    
+    <div class="footer">
+      <p>This email was sent because your child <%= @child_name %> requested to join our platform.</p>
+      <p>© 2025 Access Control Demo • Protecting children online since 2025</p>
+    </div>
+  </div>
+</body>
+</html> 

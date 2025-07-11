@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+set -vx
+
+# ==============================================================================
+# Access Control Demo - Project Setup Script
+# ==============================================================================
+# This script sets up the development environment for the Rails application
+# 
+# Version: 2.0.0
+# Last Updated: 2025-01-15
+# 
+# Usage: ./setup
+# 
+# What this script does:
+# - Validates environment prerequisites
+# - Installs Ruby dependencies
+# - Sets up SQLite databases (no external database required!)
+# - Runs database migrations
+# - Seeds demo data
+# - Builds Tailwind CSS assets
+# - Performs health checks
+# - Provides helpful next steps
+# ==============================================================================
+
+echo "🚀 Setting up Access Control Demo..."
+
+# ==============================================================================
+# VALIDATION SECTION
+# ==============================================================================
+
+# Check if we're in the right directory
+if [ ! -f "Gemfile" ]; then
+  echo "❌ Error: This script must be run from the Rails project root directory"
+  echo "   Current directory: $(pwd)"
+  echo "   Expected files: Gemfile, app/, config/, etc."
+  exit 1
+fi
+
+# Check Ruby version (optional - will show warning if not available)
+if command -v ruby >/dev/null 2>&1; then
+  RUBY_VERSION=$(ruby --version)
+  echo "📍 Current Ruby version: $RUBY_VERSION"
+  
+  # Check if Ruby version is at least 3.2.0
+  if ruby -e "exit(RUBY_VERSION < '3.2.0')" 2>/dev/null; then
+    echo "✅ Ruby version is compatible"
+  else
+    echo "⚠️  Warning: Ruby 3.2.0+ recommended. Current: $RUBY_VERSION"
+  fi
+else
+  echo "❌ Ruby not found in PATH!"
+  echo "📋 Please install Ruby 3.2.3 or higher:"
+  echo "   macOS: brew install ruby"
+  echo "   Linux: Use rbenv or rvm"
+  echo "   Windows: Use RubyInstaller"
+  exit 1
+fi
+
+# ==============================================================================
+# DEPENDENCY INSTALLATION
+# ==============================================================================
+
+echo "📦 Installing Ruby dependencies..."
+bundle check || bundle install
+
+# ==============================================================================
+# DATABASE SETUP
+# ==============================================================================
+
+echo "🔧 Setting up SQLite database..."
+
+# Create storage directory for SQLite databases
+mkdir -p storage
+
+# Create databases if they don't exist
+if ! rails runner "ActiveRecord::Base.connection" >/dev/null 2>&1; then
+  echo "Creating SQLite databases..."
+  rails db:create
+else
+  echo "Database connection verified ✅"
+fi
+
+# Run pending migrations
+echo "Running database migrations..."
+rails db:migrate
+
+# Run migrations for test environment
+echo "Setting up test database..."
+RAILS_ENV=test rails db:migrate
+
+# Seed the database with demo users and test data
+echo "Seeding database with demo users..."
+rails db:seed
+
+# ==============================================================================
+# ASSET COMPILATION
+# ==============================================================================
+
+echo "🎨 Building Tailwind CSS..."
+rails tailwindcss:build
+
+# ==============================================================================
+# CLEANUP
+# ==============================================================================
+
+echo "🧹 Cleaning up..."
+# Remove any temporary files
+rm -f tmp/pids/server.pid
+
+# ==============================================================================
+# HEALTH CHECKS
+# ==============================================================================
+
+echo "🔍 Checking project health..."
+
+# Basic health checks
+echo "✅ Ruby version: $(ruby --version)"
+echo "✅ Rails version: $(rails --version)"
+echo "✅ Bundler version: $(bundle --version)"
+
+# Check SQLite database
+if [ -f "storage/development.sqlite3" ]; then
+  echo "✅ SQLite database created successfully"
+  
+  # Check database size for verification
+  DB_SIZE=$(du -h storage/development.sqlite3 | cut -f1)
+  echo "   Database size: $DB_SIZE"
+else
+  echo "⚠️  Warning: SQLite database not found"
+  echo "   Expected: storage/development.sqlite3"
+fi
+
+# Check if all migrations are up to date
+if rails db:migrate:status | grep -q "down"; then
+  echo "⚠️  Warning: Some migrations are pending"
+  echo "   Run: rails db:migrate"
+else
+  echo "✅ All migrations are up to date"
+fi
+
+# Check if Tailwind CSS was built successfully
+if [ -f "app/assets/builds/tailwind.css" ]; then
+  echo "✅ Tailwind CSS compiled successfully"
+  
+  # Check CSS file size for verification
+  CSS_SIZE=$(du -h app/assets/builds/tailwind.css | cut -f1)
+  echo "   CSS file size: $CSS_SIZE"
+else
+  echo "⚠️  Warning: Tailwind CSS may not have compiled"
+  echo "   Run: rails tailwindcss:build"
+fi
+
+# Verify demo users were created
+USER_COUNT=$(rails runner "puts User.count" 2>/dev/null || echo "0")
+echo "✅ Demo users created: $USER_COUNT users"
+
+# ==============================================================================
+# SUCCESS MESSAGE & NEXT STEPS
+# ==============================================================================
+
+echo ""
+echo "🎉 Setup complete! Your Access Control Demo is ready."
+echo ""
+echo "📋 Next Steps:"
+echo ""
+echo "1. Start the development server:"
+echo "   bin/dev                    # Recommended (Rails + Tailwind watcher)"
+echo "   rails server              # Rails only (Tailwind won't auto-compile)"
+echo ""
+echo "2. Access the application:"
+echo "   http://localhost:3000"
+echo ""
+echo "🎯 Demo Features:"
+echo "   ✅ Organization-based access control with role permissions"
+echo "   ✅ Age-based participation system with COPPA compliance"
+echo "   ✅ Admin panel with analytics and member management"
+echo "   ✅ Parental consent requirements for users under 13"
+echo "   ✅ Email testing without SMTP (LetterOpener Web)"
+echo "   ✅ Beautiful responsive UI with Tailwind CSS"
+echo "   ✅ Pre-seeded demo users for immediate testing"
+echo "   ✅ SQLite database (no external database required!)"
+echo ""
+echo "👥 Demo Users Ready:"
+echo "   admin@test.com       (password123) - Full admin access + analytics"
+echo "   moderator1@test.com  (password123) - Can edit/delete activities"
+echo "   member1@test.com     (password123) - Standard member access"
+echo "   child@test.com       (password123) - Blocked by age (shows consent screen)"
+echo ""
+echo "🛠  Development Commands:"
+echo "   rails console             # Rails console"
+echo "   rails db:seed             # Re-load demo users"
+echo "   rails db:reset            # Reset and re-seed database"
+echo "   rails tailwindcss:build   # Rebuild Tailwind CSS"
+echo "   ./setup                   # Re-run this setup script"
+echo ""
+echo "📚 Documentation:"
+echo "   README.md                 # Project overview and features"
+echo "   DEMO_GUIDE.md             # 15-minute demo script for presentations"
+echo ""
+echo "💡 Why SQLite?"
+echo "   ✅ Zero configuration required"
+echo "   ✅ No external database installation needed"
+echo "   ✅ Perfect for development and demos"
+echo "   ✅ Production still uses PostgreSQL for scalability"
+echo ""
+echo "🚀 Ready to demo! Run 'rails server' and visit http://localhost:3000"
+echo ""
+echo "Happy coding! 🎯" 
